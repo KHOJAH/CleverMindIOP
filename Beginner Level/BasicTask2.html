@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Vertical Navbar with Top Navigation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .top-nav {
+      background-color: #333;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    .top-nav .header-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .top-nav .nav-list {
+      display: flex;
+      gap: 15px;
+    }
+
+    .top-nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 15px;
+      transition: background-color 0.3s ease;
+      border-radius: 5px;
+    }
+
+    .top-nav a:hover {
+      background-color: #575757;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+    }
+
+    .vertical-nav {
+      width: 200px;
+      background-color: #2c3e50;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .vertical-nav a {
+      color: white;
+      text-decoration: none;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .vertical-nav a:hover {
+      background-color: #34495e;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: auto;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .top-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px;
+      }
+
+      .top-nav .nav-list {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .top-nav .nav-list a {
+        width: 100%;
+        text-align: center;
+      }
+
+      .container {
+        flex-direction: column;
+      }
+
+      .vertical-nav {
+        width: 100%;
+        display: none; 
+      }
+
+      .vertical-nav.active {
+        display: block;
+      }
+
+      .menu-toggle {
+        display: block;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        cursor: pointer;
+        border: none;
+        font-size: 18px;
+      }
+
+      .menu-toggle:hover {
+        background-color: #575757;
+      }
+    }
+
+    /* Added styles for image grid and list view */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      padding: 15px;
+    }
+
+    .grid-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .image-list {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 15px;
+    }
+
+    .image-item {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .image-item img {
+      width: 100px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    /* PDF Section */
+    .pdf-section {
+      margin: 20px 0;
+      padding: 20px;
+      border: 5px solid;
+      border-image-slice: 1;
+      border-image-source: linear-gradient(to right, rgb(255, 0, 0), rgb(0, 255, 0), rgb(0, 0, 255));
+    }
+
+    .pdf-container {
+      width: 100%;
+      height: 500px;
+    }
+
+    .pdf-container embed {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* GIF Section */
+    .gif-section {
+      margin: 20px 0;
+      padding: 20px;
+      border: 5px solid;
+      border-image-slice: 1;
+      border-image-source: linear-gradient(to right, rgb(255, 0, 0), rgb(0, 255, 0), rgb(0, 0, 255));
+    }
+
+    .gif-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .gif-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <div class="header-title">Task 2</div>
+    <div class="nav-list">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+
+  <!-- Menu toggle for mobile -->
+  <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+
+  <div class="container">
+    <nav class="vertical-nav" id="verticalNav">
+      <a href="#">Dashboard</a>
+      <a href="#">Profile</a>
+      <a href="#">Settings</a>
+      <a href="#">Logout</a>
+    </nav>
+    <main class="content">
+      <h1>Solution of Task 2 Combined</h1>
+      <p>Thanks.</p>
+
+      <h1 style="text-align: center;">Image Grid</h1>
+      <div class="grid-container">
+        <div class="grid-item"><img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 1"></div>
+        <div class="grid-item"><img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 2"></div>
+        <div class="grid-item"><img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 3"></div>
+        <div class="grid-item"><img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 4"></div>
+        <div class="grid-item"><img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 5"></div>
+        <div class="grid-item"><img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 6"></div>
+        <div class="grid-item"><img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 7"></div>
+        <div class="grid-item"><img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 8"></div>
+      </div>
+
+      <h2 style="text-align: center; margin-top: 30px;">Image List View</h2>
+      <div class="image-list">
+        <ul>
+          <li>
+            <div class="image-item">
+              <img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 1">
+              <span>Item 1</span>
+            </div>
+          </li>
+          <li>
+            <div class="image-item">
+              <img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 2">
+              <span>Item 2</span>
+            </div>
+          </li>
+          <li>
+            <div class="image-item">
+              <img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 3">
+              <span>Item 3</span>
+            </div>
+          </li>
+          <li>
+            <div class="image-item">
+              <img src="https://media.licdn.com/dms/image/sync/v2/D5627AQFa1-Ut_nlZXw/articleshare-shrink_800/B56ZXZ0u_uGcAI-/0/1743116235070?e=2147483647&v=beta&t=KVOWp4qOFcP6cz93br4y-ARinyySRlyDaDgDNcy7XL8" alt="Sample Image 4">
+              <span>Item 4</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- PDF Section -->
+      <section class="pdf-section">
+        <h2 style="text-align: center;">Embedded PDF Document</h2>
+        <div class="pdf-container">
+          <embed src="https://www.w3docs.com/uploads/media/default/0001/01/540cb75550adf33f281f29132dddd14fded85bfc.pdf" type="application/pdf">
+        </div>
+      </section>
+
+      <!-- GIF Section -->
+      <section class="gif-section">
+        <h2 style="text-align: center;">Featured GIF</h2>
+        <div class="gif-container">
+          <img src="https://media.giphy.com/media/3o7abAHdYvZdBNnGZq/giphy.gif" alt="Funny Cat GIF">
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    &copy; 2025 My Website. All rights reserved.
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const verticalNav = document.getElementById('verticalNav');
+      verticalNav.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
