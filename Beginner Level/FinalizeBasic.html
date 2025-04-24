@@ -1,0 +1,507 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8"> <!-- Makes the text look nice and crisp -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Makes the site look good on phones, scales it proper -->
+    <title>Final Task</title> <!-- This is the name that shows up in the browser tab, kinda like a headline -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"> <!-- Grabs the 'Inter' font from Google, makes the text look slick -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script> <!-- Add Anime.js library -->
+    <style> 
+        body { /* Styling the whole page body */
+            margin: 0; /* No default space around the edges */
+            padding: 0; /* No default space inside the edges */
+            font-family: 'Inter', sans-serif; /* Use that cool 'Inter' font we grabbed */
+            background-color: #161616; /* Dark mode background, easy on the eyes */
+            color: #b1b1b1; /* Greyish text color, keeps it chill */
+        }
+
+        #welcome-screen { /* Styling the splash screen when you first land */
+            position: fixed; /* Stays put even when you scroll */
+            top: 0; /* Stick it to the top */
+            left: 0; /* Stick it to the left */
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: #161616; /* Same dark background */
+            display: flex; /* Lets us center stuff easily */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            opacity: 1; /* Fully visible at first */
+            transition: opacity 0.1s ease-out; /* Smooth fade out effect */
+            z-index: 9999; /* Stays on top of everything else */
+        }
+
+        #welcome-screen h1 { /* Styling the big "Welcome!" text */
+             background: radial-gradient(circle, white 0%, #b1b1b1 100%); /* Fancy gradient background for the text */
+             background-clip: text; /* Clips the background to the text shape */
+             -webkit-background-clip: text; /* Same for Safari/Chrome */
+             -webkit-text-fill-color: transparent; /* Makes the actual text color transparent so the background shows */
+             font-size: 5em; /* Big font size */
+             text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* Adds a white glow, makes it pop */
+        }
+
+        #welcome-screen.hidden { /* Style for when we hide the welcome screen */
+            opacity: 0; /* Make it invisible */
+            pointer-events: none; /* Can't click or interact with it when hidden */
+        }
+
+        .app-header { /* Styling the header bar at the top */
+            background-color: #161616; /* Dark background */
+            padding: 15px 30px; /* Space inside the header (top/bottom, left/right) */
+            display: flex; /* Use flexbox to arrange items inside */
+            justify-content: space-between; /* Puts space between logo, nav, and actions */
+            align-items: center; /* Lines up items vertically in the middle */
+            border-bottom: 1px solid transparent; /* Invisible border setup... */
+            border-image: linear-gradient(to right, #161616, #333 50%, #161616) 1; /* ...to apply this cool gradient line effect */
+            color: #e0e0e0; /* Light text color for the header */
+        }
+
+        .header-logo { /* Styling the logo area */
+            font-size: 1.4em; /* Make the logo text bigger */
+            font-weight: bold; /* Make it bold */
+            display: flex; /* Use flexbox for the dot and text */
+            align-items: center; /* Line up the dot and text nicely */
+            
+        }
+        .header-logo span { /* Styling the little yellow dot */
+             display: inline-block; /* Treat it like text but allow width/height */
+             width: 24px; /* Dot width */
+             height: 24px; /* Dot height */
+             background-color: #f0e14a; /* Bright yellow color */
+             border-radius: 50%; /* Makes it a perfect circle */
+             margin-right: 10px; /* Space between the dot and the text */
+             box-shadow: 0 0 10px #f0e14a; /* Yellow glow effect */
+
+        }
+
+        .header-nav ul { /* Styling the list of nav links */
+            list-style: none; /* Get rid of default bullet points */
+            padding: 0; /* Remove default padding */
+            margin: 0; /* Remove default margin */
+            display: flex; /* Line up links horizontally */
+            position: relative; /* Needed for the highlight effect positioning */
+        }
+
+        /* Style for the moving highlight */
+        #nav-highlight { /* This is the grey box that slides under nav links */
+            position: absolute; /* Position it relative to the 'ul' */
+            top: 0; /* Stick it to the top of the 'ul' */
+            height: 100%; /* Make it as tall as the links */
+            background-color: #444; /* Grey highlight color */
+            border-radius: 6px; /* Rounded corners like the links */
+            z-index: 0; /* Put it behind the link text */
+            opacity: 0; /* Hide it initially */
+            /* Smooth moves for position, size, and showing up */
+            transition: left 0.3s ease, width 0.3s ease, opacity 0.2s ease;
+            pointer-events: none; /* Don't let it block clicks on the links */
+            /* Starting position (JS will update this) */
+            left: 0;
+            width: 0;
+        }
+
+
+
+        .header-nav a { /* Styling the actual clickable links */
+            color: #e0e0e0; /* Light grey text color */
+            text-decoration: none; /* No underlines */
+            font-size: 0.95em; /* Slightly smaller font size */
+            font-weight: bold; /* Bold text */
+            display: block; /* Make it a block so padding works right */
+            padding: 10px 15px; /* Space inside each link (makes them bigger targets) */
+            position: relative; /* Needed to keep text on top of the highlight */
+            z-index: 1; /* Ensure text is above the highlight */
+            transition: color 0.3s ease; /* Smooth color change on hover */
+        }
+
+        .header-nav a:hover { /* When you hover over a nav link */
+            color: #ffffff; /* Text turns white */
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* Adds a white glow, makes it pop */
+        }
+
+        .nav-new-badge { /* Styling the little "NEW" badge */
+            background-color: #f0e14a; /* Bright yellow background */
+            color: #161616; /* Dark text */
+            padding: 2px 6px; /* Tiny bit of space inside the badge */
+            border-radius: 10px; /* Rounded corners */
+            font-size: 0.7em; /* Make it small */
+            font-weight: bold; /* Bold text */
+            margin-left: 5px; /* Space between link text and badge */
+            vertical-align: middle; /* Lines it up nicely with the text */
+            box-shadow: 0 0 10px #f0e14a; /* Yellow glow effect */
+            text-shadow: 0 0 5px rgba(240, 225, 74, 0.5); /* Subtle text glow */
+        }
+
+        .header-actions a { /* Styling the Login/Sign up buttons */
+            color: #e0e0e0; /* Light grey text */
+            text-decoration: none; /* No underlines */
+            margin-left: 20px; /* Space to the left of each button */
+            font-size: 0.95em; /* Same size as nav links */
+            padding: 8px 15px; /* Space inside the buttons */
+            border-radius: 6px; /* Rounded corners */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions on hover */
+        }
+
+        .header-actions a.login-btn:hover { /* Hover effect for Login button */
+             color: #ffffff; /* Text turns white */
+        }
+
+        .header-actions a.signup-btn { /* Styling the Sign up button specifically */
+            background-color: #f0e14a; /* Bright yellow background */
+            color: #161616; /* Dark text */
+            font-weight: bold; /* Bold text */
+            /* 4. Yellow Glow for Sign Up Button Text */
+            box-shadow: 0 0 10px #f0e14a; /* Yellow glow effect */
+
+        }
+         .header-actions a.signup-btn:hover { /* Hover effect for Sign up button */
+             background-color: #d4c642; /* Slightly darker yellow */
+         }
+
+        /* Content shown after welcome screen */
+        .main-content-area { /* Styling the main section of the page */
+            padding: 20px; /* Space around the content */
+            text-align: center; /* Center align the text */
+        }
+
+        /* Apply gradient to text within main-content */
+        .main-content-area h2, /* Styling the main heading */
+        .main-content-area p { /* Styling the paragraph text */
+            background: radial-gradient(circle, white 0%, #b1b1b1 100%); /* Same text gradient as welcome screen */
+            background-clip: text; /* Clip background to text */
+            -webkit-background-clip: text; /* For Safari/Chrome */
+            -webkit-text-fill-color: transparent; /* Hide text color, show background */
+            /* Adjust font sizes as needed */
+            font-size: 2.5em; /* Big heading */
+            margin-top: 40px; /* Space above the heading */
+        }
+
+        .main-content-area p { /* Styling the paragraph specifically */
+             font-size: 1.5em; /* Decent size for paragraph */
+        }
+
+        /* Container to initially hide header and main content */
+         #page-content { 
+             padding-bottom: 60px; /* Prevents content from hiding behind the fixed footer */
+         }
+
+         /* --- Footer Styles --- */
+         footer { /* Styling the footer at the bottom */
+            /* Fix the footer to the bottom of the viewport */
+            position: fixed; /* Stick it to the bottom */
+            bottom: 0; /* At the very bottom */
+            left: 0; /* Stretch from the left edge */
+            width: 100%; /* Make it span the full width */
+
+            padding: 15px 0; /* Space top/bottom inside the footer */
+            background-color: #f0e14a; /* Yellow background */
+            box-shadow: 0 0 10px #f0e14a; /* Yellow glow effect */
+            color: #161616; /* Black text */
+            font-weight: bold; /* Bold text */
+            text-align: center; /* Center the text */
+            z-index: 1000; /* Keep it on top of other stuff if needed */
+         }
+
+         /* --- Animated Text Styles (ml4) --- */
+         .ml4 { /* Container for the animated text */
+             position: relative; /* Needed for absolute positioning of letters */
+             font-weight: 900; /* Bold font */
+             font-size: 3.5em; /* Adjust size as needed */
+             text-align: center; /* Center the text block */
+             margin: 40px 0; /* Add space above and below */
+             color: #e0e0e0; /* Light text color */
+             /* Ensure it doesn't overlap footer if content is short */
+             min-height: 1.5em; /* Give it some minimum height */
+             overflow: hidden; /* Add this line to prevent horizontal overflow */
+         }
+         .ml4 .letters { /* Styling for each word span */
+             position: absolute; /* Position words on top of each other */
+             margin: auto; /* Helps with centering */
+             left: 0; /* Align to left edge */
+             top: 0; /* Align to top edge */
+             right: 0; /* Align to right edge */
+             opacity: 0; /* Start invisible */
+             /* Apply the same gradient as other text */
+             background: radial-gradient(circle, white 0%, #b1b1b1 100%);
+             background-clip: text;
+             -webkit-background-clip: text;
+             -webkit-text-fill-color: transparent;
+             text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* White glow */
+         }
+         /* --- End Animated Text Styles --- */
+
+
+         /* --- Image Slider Styles --- */
+         .image-slider-container { /* Container for the whole slider section */
+             width: 80%; /* Reduced width */
+             max-width: 900px; /* Reduced max-width to make it smaller */
+             margin: 30px auto; /* Center the slider and add space above/below */
+             overflow: hidden; /* Hide parts of images that go outside the container */
+             position: relative; /* Needed for potential absolute positioning of nav buttons */
+         }
+
+         .image-slider { /* The inner container that holds and moves the images */
+             display: flex; /* Arrange images side-by-side */
+             /* Add transition for smooth sliding effect (requires JS) */
+             transition: transform 0.5s ease-in-out; /* <-- UNCOMMENT THIS LINE */
+             width: 400%; /* Since there are 4 images, total width is 4x the container */
+         }
+
+         .image-slider img { /* Styling for each image in the slider */
+             width: 25%; /* Each image takes up 1/4 of the slider's width */
+             height: auto; /* Maintain aspect ratio */
+             display: block; /* Remove extra space below images */
+             border-radius: 15px; /* Rounded edges */
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+             /* Add some spacing between images if needed */
+             padding: 0 8px; /* Slightly reduced padding */
+             box-sizing: border-box; /* Include padding in the element's total width */
+         }
+
+         /* --- Slider Navigation Dots --- */
+         .slider-nav-dots {
+             text-align: center; /* Center the dots */
+             padding: 15px 0; /* Add some space above/below the dots */
+         }
+
+         .slider-nav-dots .dot { /* Style for each dot */
+             display: inline-block; /* Display dots side-by-side */
+             width: 12px; /* Dot width */
+             height: 12px; /* Dot height */
+             background-color: #555; /* Default dot color (inactive) */
+             border-radius: 50%; /* Make them circular */
+             margin: 0 5px; /* Space between dots */
+             cursor: pointer; /* Indicate they are clickable */
+             transition: background-color 0.3s ease; /* Smooth color change */
+         }
+
+         .slider-nav-dots .dot.active { /* Style for the active dot */
+             background-color: #f0e14a; /* Active dot color (yellow) */
+             box-shadow: 0 0 5px #f0e14a; /* Glow for active dot */
+         }
+         /* --- End Image Slider Styles --- */
+
+    </style>
+</head>
+<body> <!-- Start of the visible page content -->
+
+    <div id="welcome-screen"> <!-- The initial splash screen container -->
+        <h1>WELCOME!</h1> <!-- The big welcome message -->
+    </div>
+
+    <div id="page-content"> <!-- Container for the main page stuff (header, content) -->
+        <header class="app-header"> <!-- The header section -->
+            <div class="header-logo"> <!-- Logo area -->
+                <span></span> <!-- The yellow dot -->
+                CleverMind <!-- The site name/logo text -->
+            </div>
+            <nav class="header-nav"> <!-- Navigation links section -->
+                <ul> 
+                    <span id="nav-highlight"></span> <!-- The sliding highlight element -->
+                    <li><a href="#">Home</a></li> <!-- Nav link 1 -->
+                    <li><a href="#">Help</a></li> <!-- Nav link 2 -->
+                    <li><a href="#">Pricing</a></li> <!-- Nav link 3 -->
+                    <li><a href="#">Magic <span class="nav-new-badge">NEW</span></a></li> <!-- Nav link 4 with a "NEW" badge -->
+                </ul>
+            </nav>
+            <div class="header-actions"> <!-- Container for Login/Sign up buttons -->
+                <a href="#" class="login-btn">Login</a> <!-- Login button -->
+                <a href="#" class="signup-btn">Sign up</a> <!-- Sign up button -->
+            </div>
+        </header>
+
+        <!-- Animated Text Section -->
+        <h1 class="ml4">
+            <span class="letters letters-1">Discover</span>
+            <span class="letters letters-2">Learn</span>
+            <span class="letters letters-3">Grow!</span>
+        </h1>
+        <!-- End Animated Text Section -->
+
+        <!-- Image Slider Section -->
+        <div class="image-slider-container">
+            <div class="image-slider">
+                <img src="https://www.invaluable.com/blog/wp-content/uploads/sites/77/2020/07/CLAUDE-MONET-FIELD-OF-POPPIES-GIVERNY-1.jpg" alt="Slider Image 1">
+                <img src="https://d16kd6gzalkogb.cloudfront.net/magazine_images/Albert-Bierstadt-Looking-Down-Yosemite-Valley.-Image-via-artsbma.org_.jpg" alt="Slider Image 2">
+                <img src="https://samuelearp.com/wp-content/uploads/2023/05/bierstadt-astormintherockymountains-1868.jpg" alt="Slider Image 3">
+                <img src="https://www.maxfosterphotography.com/images/xl/Bob-Ross-Mountain-Summit.jpg" alt="Slider Image 4">
+            </div>
+            <!-- Navigation Dots -->
+            <div class="slider-nav-dots">
+                <span class="dot active"></span> <!-- First dot is active initially -->
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <!-- Dots will be controlled by JavaScript -->
+            </div>
+        </div>
+        <!-- End Image Slider Section -->
+
+        <div class="main-content-area" id="main-content"> <!-- The main content section -->
+            <h2>Main Content Area</h2> <!-- Heading for the content -->
+            <p>This content appears after the welcome screen fades out.</p> <!-- Some placeholder text -->
+        </div>
+    </div>
+
+    <!-- Footer remains in the same place in the HTML structure -->
+    <footer> <!-- The footer section -->
+         My website CleverMind <!-- Footer text -->
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => { // Run this code once the HTML is fully loaded
+            const welcomeScreen = document.getElementById('welcome-screen'); // Grab the welcome screen element
+            if (welcomeScreen) { // Make sure we actually found the welcome screen
+                // Function to hide the welcome screen after transition
+                function hideWelcomeScreen() { // This function properly hides the screen
+                    welcomeScreen.style.display = 'none'; // Set display to none so it doesn't take up space
+                }
+
+                // Start the process after 3 seconds
+                setTimeout(() => { // Wait 3 seconds before doing anything
+                    welcomeScreen.addEventListener('transitionend', hideWelcomeScreen); // When the fade-out animation finishes, run the hide function
+                    welcomeScreen.classList.add('hidden');
+
+                    // Safety fallback
+                    setTimeout(() => { // Just in case the 'transitionend' event doesn't fire
+                         if (window.getComputedStyle(welcomeScreen).display !== 'none') { // Check if it's still visible
+                             hideWelcomeScreen(); // Force hide it
+                         }
+                    }, 700); // Wait a bit longer than the fade animation (0.5s = 500ms, so 700ms is plenty)
+
+                }, 3000); // 3000 milliseconds = 3 seconds delay
+            }
+
+            // --- Navigation Highlight Logic ---
+            const navList = document.querySelector('.header-nav ul'); // Grab the list of nav links
+            const navItems = document.querySelectorAll('.header-nav li'); // Grab all the individual nav list items
+            const highlight = document.getElementById('nav-highlight'); // Grab the sliding highlight element
+
+            if (navList && navItems.length > 0 && highlight) { // Check if we found all the necessary nav bits
+                navItems.forEach(item => { // Loop through each nav list item
+                    item.addEventListener('mouseenter', () => { // When the mouse pointer enters a nav item...
+                        const itemRect = item.getBoundingClientRect(); // Get the size and position of the hovered item
+                        const navListRect = navList.getBoundingClientRect(); // Get the size and position of the whole nav list
+
+                        // Calculate position relative to the navList
+                        const leftPosition = itemRect.left - navListRect.left; // Figure out how far the item is from the start of the list
+
+                        highlight.style.left = `${leftPosition}px`; // Move the highlight to that position
+                        highlight.style.width = `${itemRect.width}px`; // Make the highlight the same width as the item
+                        highlight.style.opacity = '1';
+                    });
+                });
+
+                navList.addEventListener('mouseleave', () => { // When the mouse pointer leaves the entire nav list area...
+                    highlight.style.opacity = '0'; // Make the highlight invisible
+                });
+            }
+
+            // --- Image Slider Logic --- << MOVED INSIDE DOMContentLoaded
+            const slider = document.querySelector('.image-slider'); // Get the slider element
+            const dotsContainer = document.querySelector('.slider-nav-dots'); // Get the dots container
+            const dots = document.querySelectorAll('.slider-nav-dots .dot'); // Get all the dots
+            const images = document.querySelectorAll('.image-slider img'); // Get all images
+            const imageCount = images.length; // Get the number of images
+
+            if (slider && dotsContainer && dots.length === imageCount) { // Check if slider elements exist and counts match
+                let currentIndex = 0; // Start at the first slide (index 0)
+
+                // Function to move the slider and update dots
+                function goToSlide(index) {
+                    if (index < 0 || index >= imageCount) { // Basic boundary check
+                        console.warn("Invalid slide index:", index);
+                        return;
+                    }
+                    // Calculate the percentage to move the slider
+                    // Each image takes up (100 / imageCount)% of the slider's width
+                    const percentageOffset = -index * (100 / imageCount);
+                    slider.style.transform = `translateX(${percentageOffset}%)`; // Apply the move
+
+                    // Update the active dot
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === index); // Add 'active' class if index matches, remove otherwise
+                    });
+
+                    currentIndex = index; // Update the current index
+                }
+
+                // Add click listeners to each dot
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        goToSlide(index); // Go to the slide corresponding to the clicked dot
+                    });
+                });
+
+                // Initialize the slider to the first slide
+                goToSlide(0);
+            } else {
+                // Log an error if elements aren't found or counts don't match
+                console.error("Slider elements not found or dot/image count mismatch.", {
+                    sliderExists: !!slider,
+                    dotsContainerExists: !!dotsContainer,
+                    dotCount: dots.length,
+                    imageCount: imageCount
+                });
+            }
+            // --- End Image Slider Logic ---
+
+            // --- Animated Text Logic (ml4) ---
+            var ml4 = {}; // Create an object to hold animation parameters
+            ml4.opacityIn = [0,1]; // Fade in from opacity 0 to 1
+            ml4.scaleIn = [0.2, 1]; // Scale in from 0.2 to 1
+            ml4.scaleOut = 3; // Scale out to 3 times the size
+            ml4.durationIn = 800; // Duration of fade/scale in (milliseconds)
+            ml4.durationOut = 600; // Duration of fade/scale out
+            ml4.delay = 500; // Delay between words
+
+            // Check if anime is loaded before using it
+            if (typeof anime === 'function') {
+                anime.timeline({loop: true}) // Create an animation timeline that loops forever
+                  .add({ // Animate the first word
+                    targets: '.ml4 .letters-1',
+                    opacity: ml4.opacityIn,
+                    scale: ml4.scaleIn,
+                    duration: ml4.durationIn
+                  }).add({ // Fade out the first word
+                    targets: '.ml4 .letters-1',
+                    opacity: 0,
+                    scale: ml4.scaleOut,
+                    duration: ml4.durationOut,
+                    easing: "easeInExpo", // Use an easing function for acceleration
+                    delay: ml4.delay // Wait before starting the fade out
+                  }).add({ // Animate the second word
+                    targets: '.ml4 .letters-2',
+                    opacity: ml4.opacityIn,
+                    scale: ml4.scaleIn,
+                    duration: ml4.durationIn
+                  }).add({ // Fade out the second word
+                    targets: '.ml4 .letters-2',
+                    opacity: 0,
+                    scale: ml4.scaleOut,
+                    duration: ml4.durationOut,
+                    easing: "easeInExpo",
+                    delay: ml4.delay
+                  }).add({ // Animate the third word
+                    targets: '.ml4 .letters-3',
+                    opacity: ml4.opacityIn,
+                    scale: ml4.scaleIn,
+                    duration: ml4.durationIn
+                  }).add({ // Fade out the third word
+                    targets: '.ml4 .letters-3',
+                    opacity: 0,
+                    scale: ml4.scaleOut,
+                    duration: ml4.durationOut,
+                    easing: "easeInExpo",
+                    delay: ml4.delay
+                  });
+                  // Note: The example had a final fade out for the whole container,
+                  // but we probably don't want that here, so it's omitted.
+            } else {
+                console.error("Anime.js library not loaded.");
+            }
+            // --- End Animated Text Logic ---
+
+        }); // << END OF DOMContentLoaded LISTENER
+    </script>
+
+</body>
+</html>
