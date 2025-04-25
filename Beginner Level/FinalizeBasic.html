@@ -6,278 +6,379 @@
     <title>Final Task</title> <!-- This is the name that shows up in the browser tab, kinda like a headline -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"> <!-- Grabs the 'Inter' font from Google, makes the text look slick -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script> <!-- Add Anime.js library -->
-    <style> 
-        body { /* Styling the whole page body */
-            margin: 0; /* No default space around the edges */
-            padding: 0; /* No default space inside the edges */
-            font-family: 'Inter', sans-serif; /* Use that cool 'Inter' font we grabbed */
-            background-color: #161616; /* Dark mode background, easy on the eyes */
-            color: #b1b1b1; /* Greyish text color, keeps it chill */
-        }
-
-        #welcome-screen { /* Styling the splash screen when you first land */
-            position: fixed; /* Stays put even when you scroll */
-            top: 0; /* Stick it to the top */
-            left: 0; /* Stick it to the left */
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            background-color: #161616; /* Same dark background */
-            display: flex; /* Lets us center stuff easily */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            opacity: 1; /* Fully visible at first */
-            transition: opacity 0.1s ease-out; /* Smooth fade out effect */
-            z-index: 9999; /* Stays on top of everything else */
-        }
-
-        #welcome-screen h1 { /* Styling the big "Welcome!" text */
-             background: radial-gradient(circle, white 0%, #b1b1b1 100%); /* Fancy gradient background for the text */
-             background-clip: text; /* Clips the background to the text shape */
-             -webkit-background-clip: text; /* Same for Safari/Chrome */
-             -webkit-text-fill-color: transparent; /* Makes the actual text color transparent so the background shows */
-             font-size: 5em; /* Big font size */
-             text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* Adds a white glow, makes it pop */
-        }
-
-        #welcome-screen.hidden { /* Style for when we hide the welcome screen */
-            opacity: 0; /* Make it invisible */
-            pointer-events: none; /* Can't click or interact with it when hidden */
-        }
-
-        .app-header { /* Styling the header bar at the top */
+    <style>
+        /* == Global Styles == */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif; /* Use Google Font 'Inter' */
             background-color: #161616; /* Dark background */
-            padding: 15px 30px; /* Space inside the header (top/bottom, left/right) */
-            display: flex; /* Use flexbox to arrange items inside */
-            justify-content: space-between; /* Puts space between logo, nav, and actions */
-            align-items: center; /* Lines up items vertically in the middle */
-            border-bottom: 1px solid transparent; /* Invisible border setup... */
-            border-image: linear-gradient(to right, #161616, #333 50%, #161616) 1; /* ...to apply this cool gradient line effect */
-            color: #e0e0e0; /* Light text color for the header */
+            color: #b1b1b1; /* Default text color */
         }
 
-        .header-logo { /* Styling the logo area */
-            font-size: 1.4em; /* Make the logo text bigger */
-            font-weight: bold; /* Make it bold */
-            display: flex; /* Use flexbox for the dot and text */
-            align-items: center; /* Line up the dot and text nicely */
-            
-        }
-        .header-logo span { /* Styling the little yellow dot */
-             display: inline-block; /* Treat it like text but allow width/height */
-             width: 24px; /* Dot width */
-             height: 24px; /* Dot height */
-             background-color: #f0e14a; /* Bright yellow color */
-             border-radius: 50%; /* Makes it a perfect circle */
-             margin-right: 10px; /* Space between the dot and the text */
-             box-shadow: 0 0 10px #f0e14a; /* Yellow glow effect */
-
-        }
-
-        .header-nav ul { /* Styling the list of nav links */
-            list-style: none; /* Get rid of default bullet points */
-            padding: 0; /* Remove default padding */
-            margin: 0; /* Remove default margin */
-            display: flex; /* Line up links horizontally */
-            position: relative; /* Needed for the highlight effect positioning */
-        }
-
-        /* Style for the moving highlight */
-        #nav-highlight { /* This is the grey box that slides under nav links */
-            position: absolute; /* Position it relative to the 'ul' */
-            top: 0; /* Stick it to the top of the 'ul' */
-            height: 100%; /* Make it as tall as the links */
-            background-color: #444; /* Grey highlight color */
-            border-radius: 6px; /* Rounded corners like the links */
-            z-index: 0; /* Put it behind the link text */
-            opacity: 0; /* Hide it initially */
-            /* Smooth moves for position, size, and showing up */
-            transition: left 0.3s ease, width 0.3s ease, opacity 0.2s ease;
-            pointer-events: none; /* Don't let it block clicks on the links */
-            /* Starting position (JS will update this) */
+        /* == Welcome Screen == */
+        #welcome-screen {
+            position: fixed; /* Keep in place on scroll */
+            top: 0;
             left: 0;
-            width: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #161616; /* Match body background */
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            opacity: 1; /* Start fully visible */
+            transition: opacity 0.5s ease-out; /* Smooth fade-out (adjust timing if needed) */
+            z-index: 9999; /* Ensure it's on top */
         }
 
-
-
-        .header-nav a { /* Styling the actual clickable links */
-            color: #e0e0e0; /* Light grey text color */
-            text-decoration: none; /* No underlines */
-            font-size: 0.95em; /* Slightly smaller font size */
-            font-weight: bold; /* Bold text */
-            display: block; /* Make it a block so padding works right */
-            padding: 10px 15px; /* Space inside each link (makes them bigger targets) */
-            position: relative; /* Needed to keep text on top of the highlight */
-            z-index: 1; /* Ensure text is above the highlight */
-            transition: color 0.3s ease; /* Smooth color change on hover */
+        #welcome-screen h1 {
+             /* Apply gradient background clipped to text */
+             background: radial-gradient(circle, white 0%, #b1b1b1 100%);
+             background-clip: text;
+             -webkit-background-clip: text;
+             -webkit-text-fill-color: transparent;
+             font-size: 5em;
+             text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* White glow effect */
         }
 
-        .header-nav a:hover { /* When you hover over a nav link */
-            color: #ffffff; /* Text turns white */
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* Adds a white glow, makes it pop */
+        #welcome-screen.hidden {
+            opacity: 0; /* Fade out */
+            pointer-events: none; /* Disable interaction when hidden */
         }
 
-        .nav-new-badge { /* Styling the little "NEW" badge */
-            background-color: #f0e14a; /* Bright yellow background */
-            color: #161616; /* Dark text */
-            padding: 2px 6px; /* Tiny bit of space inside the badge */
-            border-radius: 10px; /* Rounded corners */
-            font-size: 0.7em; /* Make it small */
-            font-weight: bold; /* Bold text */
-            margin-left: 5px; /* Space between link text and badge */
-            vertical-align: middle; /* Lines it up nicely with the text */
-            box-shadow: 0 0 10px #f0e14a; /* Yellow glow effect */
-            text-shadow: 0 0 5px rgba(240, 225, 74, 0.5); /* Subtle text glow */
+        /* == Header == */
+        .app-header {
+            background-color: #161616;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* Gradient bottom border */
+            border-bottom: 1px solid transparent;
+            border-image: linear-gradient(to right, #161616, #333 50%, #161616) 1;
+            color: #e0e0e0;
         }
 
-        .header-actions a { /* Styling the Login/Sign up buttons */
-            color: #e0e0e0; /* Light grey text */
-            text-decoration: none; /* No underlines */
-            margin-left: 20px; /* Space to the left of each button */
-            font-size: 0.95em; /* Same size as nav links */
-            padding: 8px 15px; /* Space inside the buttons */
-            border-radius: 6px; /* Rounded corners */
-            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions on hover */
+        .header-logo {
+            font-size: 1.4em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
         }
 
-        .header-actions a.login-btn:hover { /* Hover effect for Login button */
-             color: #ffffff; /* Text turns white */
+        /* Yellow dot in the logo */
+        .header-logo span {
+             display: inline-block;
+             width: 24px;
+             height: 24px;
+             background-color: #f0e14a;
+             border-radius: 50%; /* Make it circular */
+             margin-right: 10px;
+             box-shadow: 0 0 10px #f0e14a; /* Yellow glow */
         }
 
-        .header-actions a.signup-btn { /* Styling the Sign up button specifically */
-            background-color: #f0e14a; /* Bright yellow background */
-            color: #161616; /* Dark text */
-            font-weight: bold; /* Bold text */
-            /* 4. Yellow Glow for Sign Up Button Text */
-            box-shadow: 0 0 10px #f0e14a; /* Yellow glow effect */
-
-        }
-         .header-actions a.signup-btn:hover { /* Hover effect for Sign up button */
-             background-color: #d4c642; /* Slightly darker yellow */
-         }
-
-        /* Content shown after welcome screen */
-        .main-content-area { /* Styling the main section of the page */
-            padding: 20px; /* Space around the content */
-            text-align: center; /* Center align the text */
+        /* == Navigation == */
+        .header-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            position: relative; /* Needed for highlight positioning */
         }
 
-        /* Apply gradient to text within main-content */
-        .main-content-area h2, /* Styling the main heading */
-        .main-content-area p { /* Styling the paragraph text */
-            background: radial-gradient(circle, white 0%, #b1b1b1 100%); /* Same text gradient as welcome screen */
-            background-clip: text; /* Clip background to text */
-            -webkit-background-clip: text; /* For Safari/Chrome */
-            -webkit-text-fill-color: transparent; /* Hide text color, show background */
-            /* Adjust font sizes as needed */
-            font-size: 2.5em; /* Big heading */
-            margin-top: 40px; /* Space above the heading */
+        /* Sliding highlight effect for nav items */
+        #nav-highlight {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background-color: #444; /* Highlight color */
+            border-radius: 6px;
+            z-index: 0; /* Behind link text */
+            opacity: 0; /* Hidden initially */
+            transition: left 0.3s ease, width 0.3s ease, opacity 0.2s ease;
+            pointer-events: none; /* Allow clicks on links */
+            left: 0; /* Initial position (updated by JS) */
+            width: 0; /* Initial size (updated by JS) */
         }
 
-        .main-content-area p { /* Styling the paragraph specifically */
-             font-size: 1.5em; /* Decent size for paragraph */
+        .header-nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: bold;
+            display: block; /* Ensure padding creates clickable area */
+            padding: 10px 15px;
+            position: relative; /* Keep text above highlight */
+            z-index: 1;
+            transition: color 0.3s ease;
         }
 
-        /* Container to initially hide header and main content */
-         #page-content { 
-             padding-bottom: 60px; /* Prevents content from hiding behind the fixed footer */
-         }
+        .header-nav a:hover {
+            color: #ffffff; /* White text on hover */
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* Add glow on hover */
+        }
 
-         /* --- Footer Styles --- */
-         footer { /* Styling the footer at the bottom */
-            /* Fix the footer to the bottom of the viewport */
-            position: fixed; /* Stick it to the bottom */
-            bottom: 0; /* At the very bottom */
-            left: 0; /* Stretch from the left edge */
-            width: 100%; /* Make it span the full width */
+        /* "NEW" badge styling */
+        .nav-new-badge {
+            background-color: #f0e14a;
+            color: #161616;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-left: 5px;
+            vertical-align: middle; /* Align with link text */
+            box-shadow: 0 0 10px #f0e14a; /* Yellow glow */
+            text-shadow: 0 0 5px rgba(240, 225, 74, 0.5);
+        }
 
-            padding: 15px 0; /* Space top/bottom inside the footer */
+        /* == Header Actions (Login/Sign Up) == */
+        .header-actions a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 20px; /* Space between buttons */
+            font-size: 0.95em;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .header-actions a.login-btn:hover {
+             color: #ffffff;
+        }
+
+        .header-actions a.signup-btn {
             background-color: #f0e14a; /* Yellow background */
-            box-shadow: 0 0 10px #f0e14a; /* Yellow glow effect */
-            color: #161616; /* Black text */
-            font-weight: bold; /* Bold text */
-            text-align: center; /* Center the text */
-            z-index: 1000; /* Keep it on top of other stuff if needed */
+            color: #161616; /* Dark text */
+            font-weight: bold;
+            box-shadow: 0 0 10px #f0e14a; /* Yellow glow */
+        }
+
+         .header-actions a.signup-btn:hover {
+             background-color: #d4c642; /* Darker yellow on hover */
          }
 
-         /* --- Animated Text Styles (ml4) --- */
-         .ml4 { /* Container for the animated text */
-             position: relative; /* Needed for absolute positioning of letters */
-             font-weight: 900; /* Bold font */
-             font-size: 3.5em; /* Adjust size as needed */
-             text-align: center; /* Center the text block */
-             margin: 40px 0; /* Add space above and below */
-             color: #e0e0e0; /* Light text color */
-             /* Ensure it doesn't overlap footer if content is short */
-             min-height: 1.5em; /* Give it some minimum height */
-             overflow: hidden; /* Add this line to prevent horizontal overflow */
+        /* == Main Content Area == */
+        #page-content {
+             padding-bottom: 60px; /* Space above the fixed footer */
+        }
+
+        .main-content-area {
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Gradient text for main content headings and paragraphs */
+        .main-content-area h2,
+        .main-content-area p {
+            background: radial-gradient(circle, white 0%, #b1b1b1 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-top: 40px;
+        }
+
+        .main-content-area p {
+             font-size: 1.5em;
+        }
+
+        /* == Footer == */
+         footer {
+            position: fixed; /* Stick to bottom */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
+            background-color: #f0e14a; /* Yellow background */
+            box-shadow: 0 0 10px #f0e14a; /* Yellow glow */
+            color: #161616; /* Dark text */
+            font-weight: bold;
+            text-align: center;
+            z-index: 1000; /* Keep on top */
          }
-         .ml4 .letters { /* Styling for each word span */
-             position: absolute; /* Position words on top of each other */
-             margin: auto; /* Helps with centering */
-             left: 0; /* Align to left edge */
-             top: 0; /* Align to top edge */
-             right: 0; /* Align to right edge */
-             opacity: 0; /* Start invisible */
-             /* Apply the same gradient as other text */
+
+         /* == Animated Text (Anime.js - ml4) == */
+         .ml4 {
+             position: relative;
+             font-weight: 900;
+             font-size: 3.5em;
+             text-align: center;
+             margin: 40px 0;
+             color: #e0e0e0;
+             min-height: 1.5em; /* Prevent collapsing */
+             overflow: hidden; /* Prevent horizontal overflow during animation */
+         }
+         .ml4 .letters {
+             position: absolute; /* Layer words */
+             margin: auto;
+             left: 0;
+             top: 0;
+             right: 0;
+             opacity: 0; /* Start hidden */
+             /* Gradient text effect */
              background: radial-gradient(circle, white 0%, #b1b1b1 100%);
              background-clip: text;
              -webkit-background-clip: text;
              -webkit-text-fill-color: transparent;
              text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* White glow */
          }
-         /* --- End Animated Text Styles --- */
 
-
-         /* --- Image Slider Styles --- */
-         .image-slider-container { /* Container for the whole slider section */
-             width: 80%; /* Reduced width */
-             max-width: 900px; /* Reduced max-width to make it smaller */
-             margin: 30px auto; /* Center the slider and add space above/below */
-             overflow: hidden; /* Hide parts of images that go outside the container */
-             position: relative; /* Needed for potential absolute positioning of nav buttons */
+         /* == Image Slider == */
+         .image-slider-container {
+             width: 80%;
+             max-width: 900px; /* Control maximum size */
+             margin: 30px auto; /* Center horizontally */
+             overflow: hidden; /* Hide non-visible image parts */
+             position: relative;
          }
 
-         .image-slider { /* The inner container that holds and moves the images */
-             display: flex; /* Arrange images side-by-side */
-             /* Add transition for smooth sliding effect (requires JS) */
-             transition: transform 0.5s ease-in-out; /* <-- UNCOMMENT THIS LINE */
-             width: 400%; /* Since there are 4 images, total width is 4x the container */
+         .image-slider {
+             display: flex;
+             transition: transform 0.5s ease-in-out; /* Smooth slide transition */
+             width: 400%; /* Adjust if number of images changes (100% * number of images) */
          }
 
-         .image-slider img { /* Styling for each image in the slider */
-             width: 25%; /* Each image takes up 1/4 of the slider's width */
+         .image-slider img {
+             width: 25%; /* Adjust if number of images changes (100% / number of images) */
              height: auto; /* Maintain aspect ratio */
-             display: block; /* Remove extra space below images */
-             border-radius: 15px; /* Rounded edges */
-             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-             /* Add some spacing between images if needed */
-             padding: 0 8px; /* Slightly reduced padding */
-             box-sizing: border-box; /* Include padding in the element's total width */
+             display: block; /* Remove extra space below image */
+             border-radius: 15px;
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+             padding: 0 8px; /* Spacing between images */
+             box-sizing: border-box; /* Include padding in width calculation */
          }
 
-         /* --- Slider Navigation Dots --- */
+         /* Slider Navigation Dots */
          .slider-nav-dots {
-             text-align: center; /* Center the dots */
-             padding: 15px 0; /* Add some space above/below the dots */
+             text-align: center;
+             padding: 15px 0;
          }
 
-         .slider-nav-dots .dot { /* Style for each dot */
-             display: inline-block; /* Display dots side-by-side */
-             width: 12px; /* Dot width */
-             height: 12px; /* Dot height */
-             background-color: #555; /* Default dot color (inactive) */
-             border-radius: 50%; /* Make them circular */
-             margin: 0 5px; /* Space between dots */
-             cursor: pointer; /* Indicate they are clickable */
-             transition: background-color 0.3s ease; /* Smooth color change */
+         .slider-nav-dots .dot {
+             display: inline-block;
+             width: 12px;
+             height: 12px;
+             background-color: #555; /* Inactive dot color */
+             border-radius: 50%; /* Circular dots */
+             margin: 0 5px; /* Spacing between dots */
+             cursor: pointer;
+             transition: background-color 0.3s ease;
          }
 
-         .slider-nav-dots .dot.active { /* Style for the active dot */
-             background-color: #f0e14a; /* Active dot color (yellow) */
+         .slider-nav-dots .dot.active {
+             background-color: #f0e14a; /* Active dot color */
              box-shadow: 0 0 5px #f0e14a; /* Glow for active dot */
          }
-         /* --- End Image Slider Styles --- */
+
+         /* == Animations == */
+         /* --- ml1 Animation Styles --- */
+         .ml1 {
+             font-weight: 700; /* Adjusted weight */
+             font-size: 1.8em; /* Adjusted size for paragraph */
+             text-align: center;
+             margin-top: 30px;
+             color: #e0e0e0;
+         }
+         .ml1 .letter {
+             display: inline-block;
+             line-height: 1em;
+             /* Gradient text effect */
+             background: radial-gradient(circle, white 0%, #b1b1b1 100%);
+             background-clip: text;
+             -webkit-background-clip: text;
+             -webkit-text-fill-color: transparent;
+             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* White glow */
+         }
+         .ml1 .text-wrapper {
+             position: relative;
+             display: inline-block;
+             padding-top: 0.1em;
+             padding-right: 0.05em;
+             padding-bottom: 0.15em;
+         }
+         .ml1 .line {
+             opacity: 0;
+             position: absolute;
+             left: 0;
+             height: 2px; /* Slightly thinner line */
+             width: 100%;
+             background-color: #f0e14a; /* Yellow line color */
+             transform-origin: 0 0;
+             box-shadow: 0 0 5px #f0e14a; /* Glow for line */
+         }
+         .ml1 .line1 { top: 0; }
+         .ml1 .line2 { bottom: 0; }
+
+         /* --- ml3 Animation Styles --- */
+         .ml3 {
+             font-weight: 900;
+             font-size: 2.8em; /* Adjusted size for h2 */
+             text-align: center;
+             margin-top: 40px;
+             color: #e0e0e0;
+         }
+         .ml3 .letter {
+             display: inline-block; /* Needed for individual letter animation */
+             line-height: 1em;
+             /* Gradient text effect */
+             background: radial-gradient(circle, white 0%, #b1b1b1 100%);
+             background-clip: text;
+             -webkit-background-clip: text;
+             -webkit-text-fill-color: transparent;
+             text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* White glow */
+         }
+
+         /* REMOVE or comment out the old .glow styles */
+         /*
+         .glow {
+             font-size: 20px;
+             color: #fff;
+             text-align: center;
+             animation: glow 0.5s ease-in-out infinite alternate;
+         }
+         @keyframes glow { ... }
+         @-webkit-keyframes glow { ... }
+         */
+
+         /* == Red Glow Effect == */
+         .glow {
+           font-size: 80px; /* As requested */
+           color: #fff;
+           text-align: center;
+           -webkit-animation: glow 1s ease-in-out infinite alternate;
+           -moz-animation: glow 1s ease-in-out infinite alternate; /* Added for Firefox compatibility */
+           animation: glow 1s ease-in-out infinite alternate;
+           margin-top: 40px; /* Add some space above the promo code */
+         }
+
+         /* Keyframes for the red glow */
+         @-webkit-keyframes glow {
+           from {
+             text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000, 0 0 60px #ff0000, 0 0 70px #ff0000; /* Red glow */
+           }
+           to {
+             text-shadow: 0 0 20px #fff, 0 0 30px #ff4d4d, 0 0 40px #ff4d4d, 0 0 50px #ff4d4d, 0 0 60px #ff4d4d, 0 0 70px #ff4d4d, 0 0 80px #ff4d4d; /* Lighter red glow */
+           }
+         }
+         @-moz-keyframes glow { /* Added for Firefox */
+           from {
+             text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000, 0 0 60px #ff0000, 0 0 70px #ff0000;
+           }
+           to {
+             text-shadow: 0 0 20px #fff, 0 0 30px #ff4d4d, 0 0 40px #ff4d4d, 0 0 50px #ff4d4d, 0 0 60px #ff4d4d, 0 0 70px #ff4d4d, 0 0 80px #ff4d4d;
+           }
+         }
+         @keyframes glow { /* Standard syntax */
+           from {
+             text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000, 0 0 60px #ff0000, 0 0 70px #ff0000;
+           }
+           to {
+             text-shadow: 0 0 20px #fff, 0 0 30px #ff4d4d, 0 0 40px #ff4d4d, 0 0 50px #ff4d4d, 0 0 60px #ff4d4d, 0 0 70px #ff4d4d, 0 0 80px #ff4d4d;
+           }
+         }
+
 
     </style>
 </head>
@@ -335,9 +436,19 @@
         </div>
         <!-- End Image Slider Section -->
 
-        <div class="main-content-area" id="main-content"> <!-- The main content section -->
-            <h2>Main Content Area</h2> <!-- Heading for the content -->
-            <p>This content appears after the welcome screen fades out.</p> <!-- Some placeholder text -->
+        <div class="main-content-area" id="main-content">
+            <!-- Apply ml3 style to h2 -->
+            <h2 class="ml3">SUBSCRIBE NOW !!</h2>
+            <!-- Apply ml1 style to p -->
+            <p class="ml1">
+                <span class="text-wrapper">
+                    <span class="line line1"></span>
+                    <span class="letters">Long-term consistency trumps short-term intensity.</span>
+                    <span class="line line2"></span>
+                </span>
+            </p>
+            <!-- Added Promo Code Header -->
+            <h3 class="glow">50% PROMO CODE</h3>
         </div>
     </div>
 
@@ -493,14 +604,78 @@
                     easing: "easeInExpo",
                     delay: ml4.delay
                   });
-                  // Note: The example had a final fade out for the whole container,
-                  // but we probably don't want that here, so it's omitted.
             } else {
-                console.error("Anime.js library not loaded.");
+                console.error("Anime.js not loaded, cannot run ml4 animation.");
             }
-            // --- End Animated Text Logic ---
+            // --- End Animated Text Logic (ml4) ---
 
-        }); // << END OF DOMContentLoaded LISTENER
+
+            // --- Animated Text Logic (ml3 - for H2) --- <mcreference link="https://tobiasahlin.com/moving-letters/#3" index="0">0</mcreference>
+            const textWrapperMl3 = document.querySelector('.ml3');
+            if (textWrapperMl3 && typeof anime === 'function') {
+                // Wrap every letter in a span
+                textWrapperMl3.innerHTML = textWrapperMl3.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
+                anime.timeline({ loop: true })
+                    .add({
+                        targets: '.ml3 .letter',
+                        opacity: [0, 1],
+                        easing: "easeInOutQuad",
+                        duration: 1800, // Slightly slower duration
+                        delay: (el, i) => 100 * (i + 1) // Slower delay
+                    }).add({
+                        targets: '.ml3',
+                        opacity: 0,
+                        duration: 1000,
+                        easing: "easeOutExpo",
+                        delay: 1500 // Longer pause before fade out
+                    });
+            } else if (!textWrapperMl3) {
+                 console.error("Element with class .ml3 not found for animation.");
+            } else {
+                 console.error("Anime.js not loaded, cannot run ml3 animation.");
+            }
+            // --- End Animated Text Logic (ml3) ---
+
+
+            // --- Animated Text Logic (ml1 - for P) --- <mcreference link="https://tobiasahlin.com/moving-letters/#1" index="1">1</mcreference>
+            const textWrapperMl1 = document.querySelector('.ml1 .letters');
+            if (textWrapperMl1 && typeof anime === 'function') {
+                // Wrap every letter in a span
+                textWrapperMl1.innerHTML = textWrapperMl1.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+
+                anime.timeline({ loop: true })
+                    .add({
+                        targets: '.ml1 .letter',
+                        scale: [0.3, 1],
+                        opacity: [0, 1],
+                        translateZ: 0,
+                        easing: "easeOutExpo",
+                        duration: 600,
+                        delay: (el, i) => 50 * (i + 1) // Slightly faster delay for potentially longer text
+                    }).add({
+                        targets: '.ml1 .line',
+                        scaleX: [0, 1],
+                        opacity: [0.5, 1],
+                        easing: "easeOutExpo",
+                        duration: 700,
+                        offset: '-=875', // Keep this offset relative to letter animation
+                        delay: (el, i, l) => 80 * (l - i)
+                    }).add({
+                        targets: '.ml1',
+                        opacity: 0,
+                        duration: 1000,
+                        easing: "easeOutExpo",
+                        delay: 2000 // Longer delay before fade out
+                    });
+            } else if (!textWrapperMl1) {
+                 console.error("Element with class .ml1 .letters not found for animation.");
+            } else {
+                 console.error("Anime.js not loaded, cannot run ml1 animation.");
+            }
+            // --- End Animated Text Logic (ml1) ---
+
+        }); // End of DOMContentLoaded
     </script>
 
 </body>
